@@ -25,8 +25,7 @@ public class MultiShapes extends Applet {
     private final static int LINE = 0, REC = 1, OVAL = 2, RED = 0, BLUE = 1, GREEN = 2;
 
     private Vector<Line> lines;
-    private Vector<Rectangle> rectangles;
-    private Vector<Oval> ovals;
+    private Vector<Shape> shapes;
     private int shapeSelector = 0, colorSelector = 0;
     private boolean isFill = false;
     private int refY;
@@ -34,12 +33,11 @@ public class MultiShapes extends Applet {
 
     @Override
     public void init() {
-        super.init(); //To change body of generated methods, choose Tools | Templates.
+        super.init();
         addBtns();
 
         lines = new Vector<>(10);
-        rectangles = new Vector<>(10);
-        ovals = new Vector<>(10);
+        shapes = new Vector<>(10);
 
         this.addMouseListener(new MouseListener() {
             @Override
@@ -55,14 +53,14 @@ public class MultiShapes extends Applet {
                         break;
 
                     case REC:
-                        rectangles.add(new Rectangle(e.getX(), e.getY(), 0, 0, getColor(), isFill));
+                        shapes.add(new Rectangle(e.getX(), e.getY(), 0, 0, getColor(), isFill));
                         refX = e.getX();
                         refY = e.getY();
 
                         break;
 
                     case OVAL:
-                        ovals.add(new Oval(e.getX(), e.getY(), 0, 0, getColor(), isFill));
+                        shapes.add(new Oval(e.getX(), e.getY(), 0, 0, getColor(), isFill));
                         refX = e.getX();
                         refY = e.getY();
 
@@ -111,13 +109,13 @@ public class MultiShapes extends Applet {
                         break;
 
                     case REC:
-                        Rectangle rectangle = rectangles.get(rectangles.size() - 1);
+                        Rectangle rectangle = (Rectangle) shapes.get(shapes.size() - 1);
                         setWidth(e, rectangle);
                         setHeight(e, rectangle);
                         break;
 
                     case OVAL:
-                        Oval oval = ovals.get(ovals.size() - 1);
+                        Oval oval = (Oval) shapes.get(shapes.size() - 1);
                         setWidth(e, oval);
                         setHeight(e, oval);
                         break;
@@ -129,7 +127,7 @@ public class MultiShapes extends Applet {
                 int height;
 
                 if (shape.getY() > e.getY()) {
-                    height = refY - e.getY();
+                    height = Math.abs(refY - e.getY());
                     shape.setY(e.getY());
                 } else {
                     height = e.getY() - shape.getY();
@@ -142,7 +140,7 @@ public class MultiShapes extends Applet {
                 int width;
 
                 if (shape.getX() > e.getX()) {
-                    width = refX - e.getX();
+                    width = Math.abs(refX - e.getX());
                     shape.setX(e.getX());
                 } else {
                     width = e.getX() - shape.getX();
@@ -158,7 +156,7 @@ public class MultiShapes extends Applet {
 
     @Override
     public void resize(int width, int height) {
-        super.resize(960, 540); //To change body of generated methods, choose Tools | Templates.
+        super.resize(960, 540);
     }
 
     @Override
@@ -168,21 +166,23 @@ public class MultiShapes extends Applet {
             g.drawLine(line.getX(), line.getY(), line.getX1(), line.getY1());
         }
 
-        for (Rectangle rectangle : rectangles) {
-            g.setColor(rectangle.getRectColor());
-            if (rectangle.isFill()) {
-                g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-            } else {
-                g.drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-            }
-        }
-
-        for (Oval oval : ovals) {
-            g.setColor(oval.getOvalColor());
-            if (oval.isFill()) {
-                g.fillOval(oval.x, oval.y, oval.width, oval.height);
-            } else {
-                g.drawOval(oval.x, oval.y, oval.width, oval.height);
+        for (Shape shape : shapes) {
+            if (shape instanceof Rectangle) {
+                Rectangle rectangle = (Rectangle) shape;
+                g.setColor(rectangle.getRectColor());
+                if (rectangle.isFill()) {
+                    g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+                } else {
+                    g.drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+                }
+            } else if (shape instanceof Oval) {
+                Oval oval = (Oval) shape;
+                g.setColor(oval.getOvalColor());
+                if (oval.isFill()) {
+                    g.fillOval(oval.x, oval.y, oval.width, oval.height);
+                } else {
+                    g.drawOval(oval.x, oval.y, oval.width, oval.height);
+                }
             }
         }
     }
@@ -200,15 +200,11 @@ public class MultiShapes extends Applet {
         addColorBtn("Green", GREEN);
         addColorBtn("Blue", BLUE);
         Button btn = new Button("Reset All ");
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                lines.clear();
-                rectangles.clear();
-                ovals.clear();
-                repaint();
+        btn.addActionListener(actionEvent -> {
+            lines.clear();
+            shapes.clear();
+            repaint();
 
-            }
         });
 
         add(btn);
@@ -219,218 +215,21 @@ public class MultiShapes extends Applet {
     private void addColorBtn(String red, int red2) {
         Button btn;
         btn = new Button(red);
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                colorSelector = red2;
-            }
-        });
+        btn.addActionListener(e -> colorSelector = red2);
         add(btn);
     }
 
     private void addFillBtn(String filled, boolean b) {
         Button btn;
         btn = new Button(filled);
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isFill = b;
-            }
-        });
+        btn.addActionListener(e -> isFill = b);
         add(btn);
     }
 
     private void addShapeButton(String line, int line2) {
         Button btn;
         btn = new Button(line);
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                shapeSelector = line2;
-            }
-        });
+        btn.addActionListener(e -> shapeSelector = line2);
         add(btn);
     }
-
-    class Line {
-        private int x, x1, y, y1;
-        private Color lineColor;
-
-        public Line(int x, int x1, int y, int y1, Color lineColor) {
-            this.x = x;
-            this.x1 = x1;
-            this.y = y;
-            this.y1 = y1;
-            this.lineColor = lineColor;
-        }
-
-
-        public Line(int x, int x1, int y, int y1) {
-            this.x = x;
-            this.x1 = x1;
-            this.y = y;
-            this.y1 = y1;
-            lineColor = Color.BLACK;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        public int getX1() {
-            return x1;
-        }
-
-        public void setX1(int x1) {
-            this.x1 = x1;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public void setY(int y) {
-            this.y = y;
-        }
-
-        public int getY1() {
-            return y1;
-        }
-
-        public void setY1(int y1) {
-            this.y1 = y1;
-        }
-
-        public Color getLineColor() {
-            return lineColor;
-        }
-
-        public void setLineColor(Color lineColor) {
-            this.lineColor = lineColor;
-        }
-
-    }
-
-    abstract class Shape {
-        protected int x, y, width, height;
-        protected Color shapeColor;
-        protected boolean isFill;
-
-        public Shape(int x, int y, int width, int height, Color shapeColor, boolean isFill) {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-            this.shapeColor = shapeColor;
-            this.isFill = isFill;
-        }
-
-        public Shape(int x, int y, int width, int height) {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-            shapeColor = Color.BLACK;
-            isFill = false;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public void setY(int y) {
-            this.y = y;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public void setWidth(int width) {
-            this.width = width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public void setHeight(int height) {
-            this.height = height;
-        }
-
-        public Color getShapeColor() {
-            return shapeColor;
-        }
-
-        public void setShapeColor(Color shapeColor) {
-            this.shapeColor = shapeColor;
-        }
-
-        public boolean isFill() {
-            return isFill;
-        }
-
-        public void setFill(boolean isFill) {
-            this.isFill = isFill;
-        }
-
-
-    }
-
-    class Rectangle extends Shape {
-
-        public Rectangle(int x, int y, int width, int height, Color shapeColor, boolean isFill) {
-            super(x, y, width, height, shapeColor, isFill);
-        }
-
-
-        public Rectangle(int x, int y, int width, int height) {
-            super(x, y, width, height);
-
-        }
-
-        public Color getRectColor() {
-            return shapeColor;
-        }
-
-        public void setRecColor(Color recColor) {
-            this.shapeColor = recColor;
-        }
-
-    }
-
-    class Oval extends Shape {
-
-        public Oval(int x, int y, int width, int height, Color shapeColor, boolean isFill) {
-            super(x, y, width, height, shapeColor, isFill);
-        }
-
-        public Oval(int x, int y, int width, int height) {
-            super(x, y, width, height);
-        }
-
-        public Color getOvalColor() {
-            return shapeColor;
-        }
-
-        public void setShapeColor(Color ovalColor) {
-            this.shapeColor = ovalColor;
-        }
-
-
-    }
-
-
 }
