@@ -4,8 +4,6 @@ import java.applet.Applet;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -212,10 +210,10 @@ public class MultiShapes extends Applet {
 
     }
 
-    private void addColorBtn(String red, int red2) {
+    private void addColorBtn(String color, int colorName) {
         Button btn;
-        btn = new Button(red);
-        btn.addActionListener(e -> colorSelector = red2);
+        btn = new Button(color);
+        btn.addActionListener(e -> colorSelector = colorName);
         add(btn);
     }
 
@@ -226,10 +224,10 @@ public class MultiShapes extends Applet {
         add(btn);
     }
 
-    private void addShapeButton(String line, int line2) {
+    private void addShapeButton(String shape, int shapeName) {
         Button btn;
-        btn = new Button(line);
-        btn.addActionListener(e -> shapeSelector = line2);
+        btn = new Button(shape);
+        btn.addActionListener(e -> shapeSelector = shapeName);
         add(btn);
     }
 }
