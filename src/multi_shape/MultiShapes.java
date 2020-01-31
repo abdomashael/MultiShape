@@ -18,7 +18,7 @@ public class MultiShapes extends Applet {
     private final static int LINE = 0, REC = 1, OVAL = 2, RED = 0, BLUE = 1, GREEN = 2;
 
     private Vector<Line> lines;
-    private Vector<Shape> shapes;
+    private Vector<Shape2D> shape2DS;
     private int shapeSelector = 0, colorSelector = 0;
     private boolean isFill = false;
     private int refY;
@@ -30,7 +30,7 @@ public class MultiShapes extends Applet {
         addBtns();
 
         lines = new Vector<>(10);
-        shapes = new Vector<>(10);
+        shape2DS = new Vector<>(10);
 
         this.addMouseListener(new MouseListener() {
             @Override
@@ -46,14 +46,14 @@ public class MultiShapes extends Applet {
                         break;
 
                     case REC:
-                        shapes.add(new Rectangle(e.getX(), e.getY(), 0, 0, getColor(), isFill));
+                        shape2DS.add(new Rectangle(e.getX(), e.getY(), 0, 0, getColor(), isFill));
                         refX = e.getX();
                         refY = e.getY();
 
                         break;
 
                     case OVAL:
-                        shapes.add(new Oval(e.getX(), e.getY(), 0, 0, getColor(), isFill));
+                        shape2DS.add(new Oval(e.getX(), e.getY(), 0, 0, getColor(), isFill));
                         refX = e.getX();
                         refY = e.getY();
 
@@ -102,13 +102,13 @@ public class MultiShapes extends Applet {
                         break;
 
                     case REC:
-                        Rectangle rectangle = (Rectangle) shapes.get(shapes.size() - 1);
+                        Rectangle rectangle = (Rectangle) shape2DS.get(shape2DS.size() - 1);
                         setWidth(e, rectangle);
                         setHeight(e, rectangle);
                         break;
 
                     case OVAL:
-                        Oval oval = (Oval) shapes.get(shapes.size() - 1);
+                        Oval oval = (Oval) shape2DS.get(shape2DS.size() - 1);
                         setWidth(e, oval);
                         setHeight(e, oval);
                         break;
@@ -116,29 +116,29 @@ public class MultiShapes extends Applet {
                 repaint();
             }
 
-            private void setHeight(MouseEvent e, Shape shape) {
+            private void setHeight(MouseEvent e, Shape2D shape2D) {
                 int height;
 
-                if (shape.getY() > e.getY()) {
+                if (shape2D.getY() > e.getY()) {
                     height = Math.abs(refY - e.getY());
-                    shape.setY(e.getY());
+                    shape2D.setY(e.getY());
                 } else {
-                    height = e.getY() - shape.getY();
+                    height = e.getY() - shape2D.getY();
 
                 }
-                shape.setHeight(height);
+                shape2D.setHeight(height);
             }
 
-            private void setWidth(MouseEvent e, Shape shape) {
+            private void setWidth(MouseEvent e, Shape2D shape2D) {
                 int width;
 
-                if (shape.getX() > e.getX()) {
+                if (shape2D.getX() > e.getX()) {
                     width = Math.abs(refX - e.getX());
-                    shape.setX(e.getX());
+                    shape2D.setX(e.getX());
                 } else {
-                    width = e.getX() - shape.getX();
+                    width = e.getX() - shape2D.getX();
                 }
-                shape.setWidth(width);
+                shape2D.setWidth(width);
             }
 
             @Override
@@ -159,17 +159,17 @@ public class MultiShapes extends Applet {
             g.drawLine(line.getX(), line.getY(), line.getX1(), line.getY1());
         }
 
-        for (Shape shape : shapes) {
-            if (shape instanceof Rectangle) {
-                Rectangle rectangle = (Rectangle) shape;
+        for (Shape2D shape2D : shape2DS) {
+            if (shape2D instanceof Rectangle) {
+                Rectangle rectangle = (Rectangle) shape2D;
                 g.setColor(rectangle.getRectColor());
                 if (rectangle.isFill()) {
                     g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                 } else {
                     g.drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                 }
-            } else if (shape instanceof Oval) {
-                Oval oval = (Oval) shape;
+            } else if (shape2D instanceof Oval) {
+                Oval oval = (Oval) shape2D;
                 g.setColor(oval.getOvalColor());
                 if (oval.isFill()) {
                     g.fillOval(oval.x, oval.y, oval.width, oval.height);
@@ -195,7 +195,7 @@ public class MultiShapes extends Applet {
         Button btn = new Button("Reset All ");
         btn.addActionListener(actionEvent -> {
             lines.clear();
-            shapes.clear();
+            shape2DS.clear();
             repaint();
 
         });

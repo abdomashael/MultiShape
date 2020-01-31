@@ -2,12 +2,12 @@ package multi_shape;
 
 import java.awt.*;
 
-abstract class Shape {
+abstract class Shape2D {
     protected int x, y, width, height;
     protected Color shapeColor;
     protected boolean isFill;
 
-    public Shape(int x, int y, int width, int height, Color shapeColor, boolean isFill) {
+    public Shape2D(int x, int y, int width, int height, Color shapeColor, boolean isFill) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -16,7 +16,7 @@ abstract class Shape {
         this.isFill = isFill;
     }
 
-    public Shape(int x, int y, int width, int height) {
+    public Shape2D(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;

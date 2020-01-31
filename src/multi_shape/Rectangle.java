@@ -2,7 +2,7 @@ package multi_shape;
 
 import java.awt.*;
 
-class Rectangle extends Shape {
+class Rectangle extends Shape2D {
 
     public Rectangle(int x, int y, int width, int height, Color shapeColor, boolean isFill) {
         super(x, y, width, height, shapeColor, isFill);

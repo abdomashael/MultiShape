@@ -2,7 +2,7 @@ package multi_shape;
 
 import java.awt.*;
 
-class Oval extends Shape {
+class Oval extends Shape2D {
 
     public Oval(int x, int y, int width, int height, Color shapeColor, boolean isFill) {
         super(x, y, width, height, shapeColor, isFill);
